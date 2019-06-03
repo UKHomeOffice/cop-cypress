@@ -1,0 +1,21 @@
+kind: pipeline
+name: default
+
+steps:
+- name: image_to_docker_hub
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: digitalpatterns/cypress
+    tags:
+      - ${DRONE_BUILD_NUMBER}
+      - ${DRONE_COMMIT_SHA}
+      - latest
+  when:
+    branch:
+      - master
+    event:
+      - push

@@ -11,6 +11,7 @@ RUN yum -y update && \
         libXScrnSaver \
         GConf2-devel \
         alsa-lib \
+        git \
         yum -y clean all && \
         pip install s3cmd && \
         chown -R "$USER":"$GROUP" "$HOME" /app /usr/src /drone
@@ -29,5 +30,9 @@ RUN cypress cache path && \
     cypress cache list
 
 USER root
+
+ENV NPM_PACKAGES=${HOME}/npm-packages
+ENV PATH ${HOME}/bin:${NPM_PACKAGES}/bin:$HOME/yarn-v$YARN_VERSION/bin:$PATH
+ENV NODE_PATH $NPM_PACKAGES/lib/node_modules:$NODE_PATH
 
 ENTRYPOINT ["cypress", "run"]

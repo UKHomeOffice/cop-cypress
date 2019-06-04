@@ -31,8 +31,4 @@ RUN cypress cache path && \
 
 USER root
 
-ENV NPM_PACKAGES=${HOME}/npm-packages
-ENV PATH ${HOME}/bin:${NPM_PACKAGES}/bin:$HOME/yarn-v$YARN_VERSION/bin:$PATH
-ENV NODE_PATH $NPM_PACKAGES/lib/node_modules:$NODE_PATH
-
 ENTRYPOINT ["cypress", "run"]

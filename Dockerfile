@@ -17,11 +17,11 @@ RUN yum -y update && \
 
 USER 1000
 RUN npm config -g set user "$USER" && \
-    npm install -g "cypress@${CYPRESS_VERSION}"
-                -g cypress-file-upload\
-                -g mocha-5.2.0 \
-                -g mochawesome \
-                -g mochawesome-report-generator && \
+    npm install -g "cypress@${CYPRESS_VERSION}" \
+                cypress-file-upload\
+                mocha@5.2.0 \
+                mochawesome \
+                mochawesome-report-generator && \
     cypress verify
 
 # Cypress cache and installed version

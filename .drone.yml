@@ -1,4 +1,12 @@
 pipeline:
+  build:
+    image: quay.io/ukhomeofficedigital/drone-docker
+    commands:
+      - docker build -t cop-cypress:$${DRONE_COMMIT_SHA} .
+    when:
+      event:
+        - pull-request
+        - push
   image_to_quay:
     image: quay.io/ukhomeofficedigital/drone-docker
     secrets:

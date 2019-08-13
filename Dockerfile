@@ -12,6 +12,7 @@ RUN yum -y update && \
         GConf2-devel \
         alsa-lib \
         git \
+        which \
         yum -y clean all && \
         pip install s3cmd && \
         chown -R "$USER":"$GROUP" "$HOME" /app /usr/src /drone

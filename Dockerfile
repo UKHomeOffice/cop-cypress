@@ -1,7 +1,7 @@
 FROM digitalpatterns/node:4
 
 ENV CI=1
-ARG CYPRESS_VERSION="3.4.0"
+ARG CYPRESS_VERSION="3.4.1"
 
 RUN yum -y update && \
     yum -y install  \

@@ -39,5 +39,5 @@ pipeline:
       {{/build.deployTo}}
     when:
       branch: master
-      event: [ deployment ]
-      status: [ success, failure ]      
+      event: [ push, deployment ]
+      status: [ success, failure ]

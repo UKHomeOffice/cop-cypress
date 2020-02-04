@@ -1,17 +1,35 @@
 pipeline:
+
+  synch_secrets:
+    image: quay.io/ukhomeofficedigital/cop-secrets
+    environment:
+      - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+      - DEPLOY_ENV=dev
+    secrets:
+      - source: DEV_DRONE_AWS_ACCESS_KEY_ID
+        target: AWS_ACCESS_KEY_ID
+      - source: DEV_DRONE_AWS_SECRET_ACCESS_KEY
+        target: AWS_SECRET_ACCESS_KEY
+      - source: DRONE_PUBLIC_TOKEN
+        target: DRONE_TOKEN
+    when:
+      environment: secrets
+      event: deployment
+      matrix:
+        TAG_NAME: 3.8.3-node13
+
   build:
     image: quay.io/ukhomeofficedigital/drone-docker
     commands:
-      - docker build -t cop-cypress:$${DRONE_COMMIT_SHA} .
+      - docker build -t cop-cypress:$${TAG_NAME} -f Dockerfile-$${DOCKER_FILENAME} .
     when:
       event:
-        - pull-request
         - push
 
-  vulnerability-scan:
+  vulnerability_scan:
     image: quay.io/ukhomeofficedigital/anchore-submission:latest
-    dockerfile: Dockerfile
-    image_name: cop-cypress:${DRONE_COMMIT_SHA}
+    dockerfile: Dockerfile-${DOCKER_FILENAME}
+    image_name: cop-cypress:${TAG_NAME}
     local_image: true
     tolerate: low
     fail_on_detection: false
@@ -22,18 +40,19 @@ pipeline:
   image_to_quay:
     image: quay.io/ukhomeofficedigital/drone-docker
     secrets:
-      - DOCKER_USERNAME
-      - DOCKER_PASSWORD
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/cop-cypress
-    tags:
-      - ${DRONE_COMMIT_SHA}
-      - latest
+    - source: QUAY_USERNAME
+      target: DOCKER_USERNAME
+    - source: QUAY_PASSWORD
+      target: DOCKER_PASSWORD
+    commands:
+      - docker build --rm=true -f Dockerfile-$${DOCKER_FILENAME} -t cop-cypress:$${TAG_NAME} . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=$${TAG_NAME} --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
+      - docker tag cop-cypress:$${TAG_NAME} quay.io/ukhomeofficedigital/cop-cypress:$${TAG_NAME}
+      - echo $${DOCKER_PASSWORD} | docker login -u $${DOCKER_USERNAME} --password-stdin quay.io
+      - docker push quay.io/ukhomeofficedigital/cop-cypress:$${TAG_NAME}
+      - docker rmi cop-cypress:$${TAG_NAME}
     when:
-      branch:
-        - master
-      event:
-        - push
+      branch: master
+      event: push
 
   notify:
     image: plugins/slack
@@ -45,10 +64,17 @@ pipeline:
         *{{repo.name}} - Build {{build.number}} - {{uppercasefirst build.deployTo}} - {{uppercase build.status}}*
         {{build.link}}
       {{else}}
-        *{{repo.name}} - Build {{build.number}} - Development - {{uppercase build.status}}*
+        *{{repo.name}} - ${TAG_NAME} - Build {{build.number}} - Development - {{uppercase build.status}}*
         {{build.link}}
       {{/build.deployTo}}
     when:
       branch: master
       event: [ push, deployment ]
       status: [ success, failure ]
+
+matrix:
+  include:
+    - DOCKER_FILENAME: node11
+      TAG_NAME: 3.8.1-node11
+    - DOCKER_FILENAME: node13
+      TAG_NAME: 3.8.3-node13

@@ -19,7 +19,6 @@ RUN npm config -g set user "$USER" && \
     npm install -g "cypress@${CYPRESS_VERSION}" && \
     cypress verify
 
-USER node
 # Cypress cache and installed version
 RUN cypress cache path && \
     cypress cache list

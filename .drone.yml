@@ -16,19 +16,19 @@ pipeline:
       environment: secrets
       event: deployment
       matrix:
-        TAG_NAME: 3.8.3-node13
+        TAG_NAME: 4.1.0-node13
 
   build:
     image: quay.io/ukhomeofficedigital/drone-docker
     commands:
-      - docker build -t cop-cypress:$${TAG_NAME} -f Dockerfile-$${DOCKER_FILENAME} .
+      - docker build -t cop-cypress:$${TAG_NAME} -f Dockerfile --build-arg CYPRESS_VERSION=$${CYPRESS_VERSION} --build-arg NODE_VERSION=$${NODE_VERSION} .
     when:
       event:
         - push
 
   vulnerability_scan:
     image: quay.io/ukhomeofficedigital/anchore-submission:latest
-    dockerfile: Dockerfile-${DOCKER_FILENAME}
+    dockerfile: Dockerfile
     image_name: cop-cypress:${TAG_NAME}
     local_image: true
     tolerate: low
@@ -45,7 +45,7 @@ pipeline:
     - source: QUAY_PASSWORD
       target: DOCKER_PASSWORD
     commands:
-      - docker build --rm=true -f Dockerfile-$${DOCKER_FILENAME} -t cop-cypress:$${TAG_NAME} . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=$${TAG_NAME} --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
+      - docker build --rm=true -f Dockerfile -t cop-cypress:$${TAG_NAME} --build-arg CYPRESS_VERSION=$${CYPRESS_VERSION} --build-arg NODE_VERSION=$${NODE_VERSION} . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=$${TAG_NAME} --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
       - docker tag cop-cypress:$${TAG_NAME} quay.io/ukhomeofficedigital/cop-cypress:$${TAG_NAME}
       - echo $${DOCKER_PASSWORD} | docker login -u $${DOCKER_USERNAME} --password-stdin quay.io
       - docker push quay.io/ukhomeofficedigital/cop-cypress:$${TAG_NAME}
@@ -74,7 +74,9 @@ pipeline:
 
 matrix:
   include:
-    - DOCKER_FILENAME: node11
-      TAG_NAME: 3.8.1-node11
-    - DOCKER_FILENAME: node13
+    - CYPRESS_VERSION: 3.8.3
+      NODE_VERSION: 13
       TAG_NAME: 3.8.3-node13
+    - CYPRESS_VERSION: 4.1.0
+      NODE_VERSION: 13
+      TAG_NAME: 4.1.0-node13

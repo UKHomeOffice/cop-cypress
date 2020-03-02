@@ -1,7 +1,8 @@
-FROM quay.io/ukhomeofficedigital/cop-node:13
+ARG NODE_VERSION=13
+FROM quay.io/ukhomeofficedigital/cop-node:$NODE_VERSION
 
-ARG CYPRESS_VERSION="3.8.3"
 ARG CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
+ARG CYPRESS_VERSION=3.8.3
 
 USER root
 RUN apt-get update && \

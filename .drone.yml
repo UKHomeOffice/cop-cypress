@@ -16,7 +16,7 @@ pipeline:
       environment: secrets
       event: deployment
       matrix:
-        TAG_NAME: 4.1.0-node13
+        TAG_NAME: 4.2.0-node13
 
   build:
     image: quay.io/ukhomeofficedigital/drone-docker

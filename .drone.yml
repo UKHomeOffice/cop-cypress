@@ -16,7 +16,7 @@ pipeline:
       environment: secrets
       event: deployment
       matrix:
-        TAG_NAME: 4.1.0-node13
+        TAG_NAME: 4.2.0-node13
 
   build:
     image: quay.io/ukhomeofficedigital/drone-docker
@@ -26,16 +26,16 @@ pipeline:
       event:
         - push
 
-#  vulnerability_scan:
-#    image: quay.io/ukhomeofficedigital/anchore-submission:latest
-#    dockerfile: Dockerfile
-#    image_name: cop-cypress:${TAG_NAME}
-#    local_image: true
-#    tolerate: low
-#    fail_on_detection: false
-#    when:
-#      branch: master
-#      event: push
+  vulnerability_scan:
+    image: quay.io/ukhomeofficedigital/anchore-submission:latest
+    dockerfile: Dockerfile
+    image_name: cop-cypress:${TAG_NAME}
+    local_image: true
+    tolerate: low
+    fail_on_detection: false
+    when:
+      branch: master
+      event: push
 
   image_to_quay:
     image: quay.io/ukhomeofficedigital/drone-docker
@@ -74,12 +74,9 @@ pipeline:
 
 matrix:
   include:
-    - CYPRESS_VERSION: 3.8.3
-      NODE_VERSION: 13
-      TAG_NAME: 3.8.3-node13
-    - CYPRESS_VERSION: 4.1.0
-      NODE_VERSION: 13
-      TAG_NAME: 4.1.0-node13
     - CYPRESS_VERSION: 4.2.0
       NODE_VERSION: 13
       TAG_NAME: 4.2.0-node13
+    - CYPRESS_VERSION: 4.3.0
+      NODE_VERSION: 13
+      TAG_NAME: 4.3.0-node13

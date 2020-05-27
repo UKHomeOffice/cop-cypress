@@ -16,7 +16,7 @@ pipeline:
       environment: secrets
       event: deployment
       matrix:
-        TAG_NAME: 4.2.0-node13
+        TAG_NAME: 4.3.0-node13
 
   build:
     image: quay.io/ukhomeofficedigital/drone-docker
@@ -74,9 +74,9 @@ pipeline:
 
 matrix:
   include:
-    - CYPRESS_VERSION: 4.2.0
-      NODE_VERSION: 13
-      TAG_NAME: 4.2.0-node13
     - CYPRESS_VERSION: 4.3.0
       NODE_VERSION: 13
       TAG_NAME: 4.3.0-node13
+    - CYPRESS_VERSION: 4.7.0
+      NODE_VERSION: 13
+      TAG_NAME: 4.7.0-node13

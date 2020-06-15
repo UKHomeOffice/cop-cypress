@@ -12,9 +12,9 @@ RUN apt-get update && \
         libnss3 \
         libxss1 \
         libxtst6 \
-        python-pip  \
+        python3-pip  \
         xvfb && \
-        pip install s3cmd boto3 flatten-dict
+        pip3 install s3cmd boto3 flatten-dict
 
 RUN npm config -g set user "$USER" && \
     npm install -g "cypress@${CYPRESS_VERSION}" && \

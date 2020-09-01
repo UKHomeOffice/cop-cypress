@@ -26,16 +26,16 @@ pipeline:
       event:
         - push
 
-#  vulnerability_scan:
-#    image: quay.io/ukhomeofficedigital/anchore-submission:latest
-#    dockerfile: Dockerfile
-#    image_name: cop-cypress:${TAG_NAME}
-#    local_image: true
-#    tolerate: low
-#    fail_on_detection: false
-#    when:
-#      branch: master
-#      event: push
+  vulnerability_scan:
+    image: quay.io/ukhomeofficedigital/anchore-submission:latest
+    dockerfile: Dockerfile
+    image_name: cop-cypress:${TAG_NAME}
+    local_image: true
+    tolerate: low
+    fail_on_detection: false
+    when:
+      branch: master
+      event: push
 
   image_to_quay:
     image: quay.io/ukhomeofficedigital/drone-docker
@@ -80,3 +80,6 @@ matrix:
     - CYPRESS_VERSION: 4.11.0
       NODE_VERSION: 13
       TAG_NAME: 4.11.0-node13
+    - CYPRESS_VERSION: 5.0.0
+      NODE_VERSION: 13
+      TAG_NAME: 5.0.0-node13

@@ -80,6 +80,6 @@ matrix:
     - CYPRESS_VERSION: 4.11.0
       NODE_VERSION: 13
       TAG_NAME: 4.11.0-node13
-    - CYPRESS_VERSION: 5.0.0
+    - CYPRESS_VERSION: 5.1.0
       NODE_VERSION: 13
-      TAG_NAME: 5.0.0-node13
+      TAG_NAME: 5.1.0-node13

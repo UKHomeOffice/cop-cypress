@@ -29,7 +29,7 @@ steps:
     LOCAL_IMAGE: true
     SERVICE_URL: http://anchore-submission-server:10080
     TOLERATE: low
-    WHITELIST_FILE: whitelist
+    WHITELIST_FILE: whitelist-1
   when:
     branch:
     - master
@@ -131,7 +131,7 @@ steps:
     LOCAL_IMAGE: true
     SERVICE_URL: http://anchore-submission-server:10080
     TOLERATE: low
-    WHITELIST_FILE: whitelist
+    WHITELIST_FILE: whitelist-2
   when:
     branch:
     - master
@@ -252,7 +252,7 @@ steps:
     LOCAL_IMAGE: true
     SERVICE_URL: http://anchore-submission-server:10080
     TOLERATE: low
-    WHITELIST_FILE: whitelist
+    WHITELIST_FILE: whitelist-3
   when:
     branch:
     - master

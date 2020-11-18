@@ -13,7 +13,7 @@ steps:
   image: docker:19.03.12-dind
   commands:
   - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
-  - docker build -t cop-cypress:4.11.0-node13 -f Dockerfile --build-arg CYPRESS_VERSION=4.11.0 --build-arg NODE_VERSION=13 .
+  - docker build -t cop-cypress:$4.11.0-node13 -f Dockerfile --build-arg CYPRESS_VERSION=$4.11.0 --build-arg NODE_VERSION=$13 .
   volumes:
   - name: dockersock
     path: /var/run
@@ -22,13 +22,14 @@ steps:
     - push
 
 - name: vulnerability_scan
-  pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/anchore-submission:latest
-  settings:
-    dockerfile: Dockerfile
-    image_name: cop-cypress:4.11.0-node13
-    local_image: true
-    tolerate: low
+  image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
+  environment:
+    DOCKERFILE: Dockerfile
+    IMAGE_NAME: cop-cypress:4.11.0-node13
+    LOCAL_IMAGE: true
+    SERVICE_URL: http://anchore-submission-server:10080
+    TOLERATE: low
+    WHITELIST_FILE: whitelist-1
   when:
     branch:
     - master
@@ -38,11 +39,11 @@ steps:
 - name: image_to_quay
   image: plugins/docker
   commands:
-  - docker build --rm=true -f Dockerfile -t cop-cypress:4.11.0-node13 --build-arg CYPRESS_VERSION=4.11.0 --build-arg NODE_VERSION=13 . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=4.11.0-node13 --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
-  - docker tag cop-cypress:4.11.0-node13 quay.io/ukhomeofficedigital/cop-cypress:4.11.0-node13
+  - docker build --rm=true -f Dockerfile -t cop-cypress:$4.11.0-node13 --build-arg CYPRESS_VERSION=$4.11.0 --build-arg NODE_VERSION=$13 . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=$4.11.0-node13 --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
+  - docker tag cop-cypress:$4.11.0-node13 quay.io/ukhomeofficedigital/cop-cypress:$4.11.0-node13
   - echo $${DOCKER_PASSWORD} | docker login -u $${DOCKER_USERNAME} --password-stdin quay.io
-  - docker push quay.io/ukhomeofficedigital/cop-cypress:4.11.0-node13
-  - docker rmi cop-cypress:4.11.0-node13
+  - docker push quay.io/ukhomeofficedigital/cop-cypress:$4.11.0-node13
+  - docker rmi cop-cypress:$4.11.0-node13
   environment:
     DOCKER_PASSWORD:
       from_secret: QUAY_PASSWORD
@@ -114,7 +115,7 @@ steps:
   image: docker:19.03.12-dind
   commands:
   - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
-  - docker build -t cop-cypress:5.1.0-node13 -f Dockerfile --build-arg CYPRESS_VERSION=5.1.0 --build-arg NODE_VERSION=13 .
+  - docker build -t cop-cypress:$5.1.0-node13 -f Dockerfile --build-arg CYPRESS_VERSION=$5.1.0 --build-arg NODE_VERSION=$13 .
   volumes:
   - name: dockersock
     path: /var/run
@@ -123,13 +124,14 @@ steps:
     - push
 
 - name: vulnerability_scan
-  pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/anchore-submission:latest
-  settings:
-    dockerfile: Dockerfile
-    image_name: cop-cypress:5.1.0-node13
-    local_image: true
-    tolerate: low
+  image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
+  environment:
+    DOCKERFILE: Dockerfile
+    IMAGE_NAME: cop-cypress:5.1.0-node13
+    LOCAL_IMAGE: true
+    SERVICE_URL: http://anchore-submission-server:10080
+    TOLERATE: low
+    WHITELIST_FILE: whitelist-2
   when:
     branch:
     - master
@@ -139,11 +141,11 @@ steps:
 - name: image_to_quay
   image: plugins/docker
   commands:
-  - docker build --rm=true -f Dockerfile -t cop-cypress:5.1.0-node13 --build-arg CYPRESS_VERSION=5.1.0 --build-arg NODE_VERSION=13 . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=5.1.0-node13 --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
-  - docker tag cop-cypress:5.1.0-node13 quay.io/ukhomeofficedigital/cop-cypress:5.1.0-node13
+  - docker build --rm=true -f Dockerfile -t cop-cypress:$5.1.0-node13 --build-arg CYPRESS_VERSION=$5.1.0 --build-arg NODE_VERSION=$13 . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=$5.1.0-node13 --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
+  - docker tag cop-cypress:$5.1.0-node13 quay.io/ukhomeofficedigital/cop-cypress:$5.1.0-node13
   - echo $${DOCKER_PASSWORD} | docker login -u $${DOCKER_USERNAME} --password-stdin quay.io
-  - docker push quay.io/ukhomeofficedigital/cop-cypress:5.1.0-node13
-  - docker rmi cop-cypress:5.1.0-node13
+  - docker push quay.io/ukhomeofficedigital/cop-cypress:$5.1.0-node13
+  - docker rmi cop-cypress:$5.1.0-node13
   environment:
     DOCKER_PASSWORD:
       from_secret: QUAY_PASSWORD
@@ -234,7 +236,7 @@ steps:
   image: docker:19.03.12-dind
   commands:
   - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
-  - docker build -t cop-cypress:5.2.0-node13 -f Dockerfile --build-arg CYPRESS_VERSION=5.2.0 --build-arg NODE_VERSION=13 .
+  - docker build -t cop-cypress:$5.2.0-node13 -f Dockerfile --build-arg CYPRESS_VERSION=$5.2.0 --build-arg NODE_VERSION=$13 .
   volumes:
   - name: dockersock
     path: /var/run
@@ -243,13 +245,14 @@ steps:
     - push
 
 - name: vulnerability_scan
-  pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/anchore-submission:latest
-  settings:
-    dockerfile: Dockerfile
-    image_name: cop-cypress:5.2.0-node13
-    local_image: true
-    tolerate: low
+  image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
+  environment:
+    DOCKERFILE: Dockerfile
+    IMAGE_NAME: cop-cypress:5.2.0-node13
+    LOCAL_IMAGE: true
+    SERVICE_URL: http://anchore-submission-server:10080
+    TOLERATE: low
+    WHITELIST_FILE: whitelist-3
   when:
     branch:
     - master
@@ -259,11 +262,11 @@ steps:
 - name: image_to_quay
   image: plugins/docker
   commands:
-  - docker build --rm=true -f Dockerfile -t cop-cypress:5.2.0-node13 --build-arg CYPRESS_VERSION=5.2.0 --build-arg NODE_VERSION=13 . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=5.2.0-node13 --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
-  - docker tag cop-cypress:5.2.0-node13 quay.io/ukhomeofficedigital/cop-cypress:5.2.0-node13
+  - docker build --rm=true -f Dockerfile -t cop-cypress:$5.2.0-node13 --build-arg CYPRESS_VERSION=$5.2.0 --build-arg NODE_VERSION=$13 . --pull=true --label org.label-schema.schema-version=1.0 --label org.label-schema.build-date="$(date)" --label org.label-schema.vcs-ref=$5.2.0-node13 --label org.label-schema.vcs-url="https://github.com/UKHomeOffice/cop-cypress.git"
+  - docker tag cop-cypress:$5.2.0-node13 quay.io/ukhomeofficedigital/cop-cypress:$5.2.0-node13
   - echo $${DOCKER_PASSWORD} | docker login -u $${DOCKER_USERNAME} --password-stdin quay.io
-  - docker push quay.io/ukhomeofficedigital/cop-cypress:5.2.0-node13
-  - docker rmi cop-cypress:5.2.0-node13
+  - docker push quay.io/ukhomeofficedigital/cop-cypress:$5.2.0-node13
+  - docker rmi cop-cypress:$5.2.0-node13
   environment:
     DOCKER_PASSWORD:
       from_secret: QUAY_PASSWORD

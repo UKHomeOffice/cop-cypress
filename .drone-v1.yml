@@ -32,7 +32,7 @@ steps:
   image: docker:19.03.12-dind
   commands:
   - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
-  - docker build -t cop-cypress:6.2.1-node13 -f Dockerfile --build-arg CYPRESS_VERSION=6.2.1 --build-arg NODE_VERSION=13 .
+  - docker build -t cop-cypress:6.3.0-node13 -f Dockerfile --build-arg CYPRESS_VERSION=6.3.0 --build-arg NODE_VERSION=13 .
   volumes:
   - name: dockersock
     path: /var/run
@@ -44,7 +44,7 @@ steps:
   image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
   environment:
     DOCKERFILE: Dockerfile
-    IMAGE_NAME: cop-cypress:6.2.1-node13
+    IMAGE_NAME: cop-cypress:6.3.0-node13
     LOCAL_IMAGE: true
     SERVICE_URL: http://anchore-submission-server:10080
     TOLERATE: low
@@ -68,8 +68,8 @@ steps:
       from_secret: QUAY_PASSWORD
     DOCKER_USERNAME:
       from_secret: QUAY_USERNAME
-    CYPRESS_VERSION: 6.2.1
-    TAG_NAME: 6.2.1-node13
+    CYPRESS_VERSION: 6.3.0
+    TAG_NAME: 6.3.0-node13
   volumes:
   - name: dockersock
     path: /var/run
@@ -84,7 +84,7 @@ steps:
   image: plugins/slack
   settings:
     channel: cop-deployments
-    template: "{{#build.deployTo}}\n  *{{repo.name}} - Build {{build.number}} - {{uppercasefirst build.deployTo}} - {{uppercase build.status}}*\n  {{build.link}}\n{{else}}\n  *{{repo.name}} - 6.2.1-node13 - Build {{build.number}} - Development - {{uppercase build.status}}*\n  {{build.link}}\n{{/build.deployTo}}\n"
+    template: "{{#build.deployTo}}\n  *{{repo.name}} - Build {{build.number}} - {{uppercasefirst build.deployTo}} - {{uppercase build.status}}*\n  {{build.link}}\n{{else}}\n  *{{repo.name}} - 6.3.0-node13 - Build {{build.number}} - Development - {{uppercase build.status}}*\n  {{build.link}}\n{{/build.deployTo}}\n"
     username: Drone Build Watcher
   environment:
     SLACK_WEBHOOK:
